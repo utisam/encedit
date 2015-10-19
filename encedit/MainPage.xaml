@@ -7,67 +7,18 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <Style x:Key="paneButtonStyle" TargetType="Button">
-            <Setter Property="Height" Value="48" />
-            <Setter Property="FontSize" Value="21.333" />
-            <Setter Property="HorizontalAlignment" Value="Stretch"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="Padding" Value="0" />
-        </Style>
-        <Style x:Key="paneIconStyle" TargetType="FontIcon">
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
-            <Setter Property="Width" Value="48" />
-        </Style>
-    </Page.Resources>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="New" x:Uid="New" Icon="Add" Label="New"/>
+                <AppBarButton x:Name="Save" x:Uid="Save" Icon="Save" Label="Save"/>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" 
-        RequestedTheme="Light">
-
-        <SplitView x:Name="Splitter" DisplayMode="CompactOverlay" 
-               CompactPaneLength="48" OpenPaneLength="320"  
-               IsPaneOpen="{Binding ElementName=HamburgerButton, Path=IsChecked, Mode=TwoWay}" 
-               PaneBackground="DarkSeaGreen" >
-            <SplitView.Pane>
-                <StackPanel>
-                    <Button Style="{StaticResource paneButtonStyle}" Margin="0,32,0,0">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Style="{StaticResource paneIconStyle}" Glyph="&#xE109;"  />
-                            <TextBlock x:Uid="New">New</TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <Button Style="{StaticResource paneButtonStyle}">
-                        <StackPanel Orientation="Horizontal">
-                            <FontIcon Style="{StaticResource paneIconStyle}" Glyph="&#xE105;" />
-                            <TextBlock x:Uid="Save">Save</TextBlock>
-                        </StackPanel>
-                    </Button>
-                    <TextBlock  FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,8" >
-                        最近使用したファイル
-                    </TextBlock>
-                    <StackPanel Name="RecentFiles" Margin="48,0,0,0">
-                        <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
-                            <StackPanel>
-                                <TextBlock FontSize="16">FileName</TextBlock>
-                                <TextBlock Foreground="WhiteSmoke" FontSize="12">C:\test\path</TextBlock>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                </StackPanel>
-            </SplitView.Pane>
-            <SplitView.Content>
-                <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                    <TextBlock x:Name="Headding" x:Uid="Headding" Text="Headding" Margin="10,10,0,0"  FontSize="26.667" HorizontalAlignment="Left" VerticalAlignment="Top" />
-                    <PasswordBox x:Name="Password" FontSize="14.667" Margin="10,60,10,0" VerticalAlignment="Top"  />
-                    <TextBox x:Name="ContentText"  AcceptsReturn="True" Margin="10,100,10,10" />
-                </Grid>
-            </SplitView.Content>
-        </SplitView>
-
-        <ToggleButton x:Name="HamburgerButton" VerticalAlignment="Top" Foreground="{ThemeResource AppBarBackgroundThemeBrush}" Width="48" Height="32" >
-            <ToggleButton.Content>
-                <FontIcon x:Name="Hamburger" FontFamily="Segoe MDL2 Assets" Glyph="&#xE700;" />
-            </ToggleButton.Content>
-        </ToggleButton>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock x:Name="Headding" x:Uid="Headding" Text="Headding" Margin="10,10,0,0"  FontSize="26.667" HorizontalAlignment="Left" VerticalAlignment="Top" />
+            <PasswordBox x:Name="Password" FontSize="14.667" Margin="10,60,10,0" VerticalAlignment="Top"  />
+            <TextBox x:Name="ContentText"  AcceptsReturn="True" Margin="10,100,10,10" />
     </Grid>
 </Page>

@@ -120,10 +120,10 @@
   <data name="Headding.Text" xml:space="preserve">
     <value>新しいファイル</value>
   </data>
-  <data name="New.Text" xml:space="preserve">
+  <data name="New.Label" xml:space="preserve">
     <value>新規作成</value>
   </data>
-  <data name="Save.Text" xml:space="preserve">
+  <data name="Save.Label" xml:space="preserve">
     <value>保存</value>
   </data>
 </root>
