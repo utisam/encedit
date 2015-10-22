@@ -10,15 +10,50 @@
     <Page.BottomAppBar>
         <CommandBar>
             <CommandBar.PrimaryCommands>
-                <AppBarButton x:Name="New" x:Uid="New" Icon="Add" Label="New"/>
-                <AppBarButton x:Name="Save" x:Uid="Save" Icon="Save" Label="Save"/>
+                <!-- New -->
+                <AppBarButton x:Name="New" x:Uid="New" Icon="Add" Label="New" Click="newButtonClick"/>
+                <!-- Open -->
+                <AppBarButton x:Name="Open" x:Uid="Open" Icon="OpenFile" Label="Open" Click="openButtonClick">
+                    <FlyoutBase.AttachedFlyout>
+                        <!-- Flyout for Open -->
+                        <Flyout x:Name="OpenPasswordFlyout">
+                            <StackPanel Width="320">
+                                <TextBlock x:Uid="OpenPasswordHeadding" Text="Password" FontSize="21.333" />
+                                <PasswordBox x:Name="OpenPassword" FontSize="14.667" Margin="0,10,0,0" />
+                                <StackPanel Margin="10,10,10,0" HorizontalAlignment="Right" Orientation="Horizontal">
+                                    <TextBlock x:Name="IncorrectOpenPassMsg" Text="Incorrect Password" Margin="10,4" Visibility="Collapsed"/>
+                                    <Button Content="OK" Padding="16,4,16,4" Click="openOkButtonClick" />
+                                    <Button Content="Cancel" Margin="8,0,0,0" Padding="16,4,16,4" Click="openCancelButtonClick" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Flyout>
+                    </FlyoutBase.AttachedFlyout>
+                </AppBarButton>
+                <!-- Save -->
+                <AppBarButton x:Name="Save" x:Uid="Save" Icon="Save" Label="Save">
+                    <AppBarButton.Flyout>
+                        <Flyout>
+                            <StackPanel Width="320">
+                                <TextBlock x:Uid="SavePasswordHeadding" Text="Password" FontSize="21.333" />
+                                <PasswordBox x:Name="SavePassword" FontSize="14.667" Margin="0,10,0,0" />
+                                <PasswordBox x:Name="PassConferm" FontSize="14.667" Margin="0,10,0,0" />
+                                <StackPanel Margin="10,10,10,0" HorizontalAlignment="Right" Orientation="Horizontal">
+                                    <TextBlock x:Name="IncorrectSavePassMsg" Text="Incorrect Password" Margin="10,4" Visibility="Collapsed"/>
+                                    <Button Content="OK" Padding="16,4,16,4" Click="saveButtonClick" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Flyout>
+                    </AppBarButton.Flyout>
+                </AppBarButton>
+
             </CommandBar.PrimaryCommands>
         </CommandBar>
     </Page.BottomAppBar>
 
+    <!-- Content -->
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <TextBlock x:Name="Headding" x:Uid="Headding" Text="Headding" Margin="10,10,0,0"  FontSize="26.667" HorizontalAlignment="Left" VerticalAlignment="Top" />
-            <PasswordBox x:Name="Password" FontSize="14.667" Margin="10,60,10,0" VerticalAlignment="Top"  />
-            <TextBox x:Name="ContentText"  AcceptsReturn="True" Margin="10,100,10,10" />
+        <TextBox x:Name="ContentText"  AcceptsReturn="True" Margin="10,60,10,10" />
     </Grid>
+
 </Page>

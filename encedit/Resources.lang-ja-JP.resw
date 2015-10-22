@@ -117,13 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="EncryptedPlainText" xml:space="preserve">
+    <value>暗号化されたテキスト</value>
+  </data>
   <data name="Headding.Text" xml:space="preserve">
     <value>新しいファイル</value>
   </data>
   <data name="New.Label" xml:space="preserve">
     <value>新規作成</value>
   </data>
+  <data name="NewFile" xml:space="preserve">
+    <value>新しいファイル</value>
+  </data>
+  <data name="Open.Label" xml:space="preserve">
+    <value>開く</value>
+  </data>
   <data name="Save.Label" xml:space="preserve">
     <value>保存</value>
+  </data>
+  <data name="SuggestedFileName" xml:space="preserve">
+    <value>新しい暗号化されたテキスト.etxt</value>
   </data>
 </root>
