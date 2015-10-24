@@ -20,8 +20,9 @@ namespace encedit
     public sealed partial class MainPage : Page
     {
 
-        static readonly string ALGORITHM_NAME = SymmetricAlgorithmNames.AesCbcPkcs7;
-        const uint keyLength = 32;
+        private static readonly string ALGORITHM_NAME = SymmetricAlgorithmNames.AesCbcPkcs7;
+        private const uint SALT_SIZE = 32;
+        private const uint SALT_ITERATION_COUNT = 10000;
 
         public MainPage()
         {
@@ -95,7 +96,7 @@ namespace encedit
             // https://msdn.microsoft.com/en-us/library/windows/apps/windows.security.cryptography.core.symmetrickeyalgorithmprovider.aspx
             SymmetricKeyAlgorithmProvider algorithm = SymmetricKeyAlgorithmProvider.OpenAlgorithm(ALGORITHM_NAME);
 
-            salt = CryptographicBuffer.GenerateRandom(32);
+            salt = CryptographicBuffer.GenerateRandom(SALT_SIZE);
             var derviedKey = createDerviedKey(algorithm, rawPassword, salt);
 
             iv = CryptographicBuffer.GenerateRandom(algorithm.BlockLength);
@@ -105,14 +106,14 @@ namespace encedit
 
         private IBuffer toCompressedBuffer(string text)
         {
-            var memoryStream = new MemoryStream();
-
-            using (var writer = new StreamWriter(new DeflateStream(memoryStream, CompressionMode.Compress)))
+            using (var memoryStream = new MemoryStream())
             {
-                writer.Write(text);
+                using (var writer = new StreamWriter(new DeflateStream(memoryStream, CompressionMode.Compress)))
+                {
+                    writer.Write(text);
+                }
+                return memoryStream.ToArray().AsBuffer();
             }
-
-            return memoryStream.ToArray().AsBuffer();
         }
 
         private async Task<StorageFile> pickupSaveFile()
@@ -160,8 +161,10 @@ namespace encedit
 
         private string toDecompressedText(IBuffer buffer)
         {
-            var reader = new StreamReader(new DeflateStream(buffer.AsStream(), CompressionMode.Decompress));
-            return reader.ReadToEnd();
+            using (var reader = new StreamReader(new DeflateStream(buffer.AsStream(), CompressionMode.Decompress)))
+            {
+                return reader.ReadToEnd();
+            }
         }
 
         private IBuffer toDecryptedBuffer(IBuffer buffer, string rawPassword)
@@ -169,7 +172,7 @@ namespace encedit
             SymmetricKeyAlgorithmProvider algorithm = SymmetricKeyAlgorithmProvider.OpenAlgorithm(ALGORITHM_NAME);
             byte[] bufferArray = buffer.ToArray();
 
-            IBuffer salt = bufferArray.SubArray(0, 32).AsBuffer();
+            IBuffer salt = bufferArray.SubArray(0, (int) SALT_SIZE).AsBuffer();
             var derviedKey = createDerviedKey(algorithm, rawPassword, salt);
 
             int blockLength = (int)algorithm.BlockLength;
@@ -194,7 +197,7 @@ namespace encedit
             IBuffer passwordBuffer = CryptographicBuffer.ConvertStringToBinary(rawPassword, BinaryStringEncoding.Utf8);
             CryptographicKey key = pbkdf2.CreateKey(passwordBuffer);
 
-            KeyDerivationParameters parameters = KeyDerivationParameters.BuildForPbkdf2(salt, 10000);
+            KeyDerivationParameters parameters = KeyDerivationParameters.BuildForPbkdf2(salt, SALT_ITERATION_COUNT);
 
             IBuffer derviedKeyMaterial = CryptographicEngine.DeriveKeyMaterial(key, parameters, 32);
             return algorithm.CreateSymmetricKey(derviedKeyMaterial);
