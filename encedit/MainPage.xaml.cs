@@ -14,6 +14,7 @@ using Windows.Storage.Provider;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace encedit
 {
@@ -131,12 +132,33 @@ namespace encedit
 
         private StorageFile openFile = null;
 
-        private async void openButtonClick(object sender, RoutedEventArgs e)
+        public async void openButtonClick(object sender, RoutedEventArgs e)
         {
             openFile = await pickupOpenFile();
+            openFlyout();
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs args)
+        {
+            openFile = args.Parameter as StorageFile;
+        }
+
+        private void pageLoaded(object sender, RoutedEventArgs e)
+        {
+            openFlyout();
+        }
+
+        public void OnFileReActivated(StorageFile file)
+        {
+            openFile = file;
+            openFlyout();
+        }
+
+        private void openFlyout()
+        {
             if (openFile != null)
             {
-                OpenPasswordFlyout.ShowAt(sender as FrameworkElement);
+                OpenPasswordFlyout.ShowAt(Open);
             }
         }
 
@@ -151,8 +173,11 @@ namespace encedit
                     OpenPasswordFlyout.Hide();
                     OpenPassword.Password = "";
                     IncorrectOpenPassMsg.Visibility = Visibility.Collapsed;
+                    openFile = null;
                 }
+#pragma warning disable CS0168 // 変数は宣言されていますが、使用されていません
                 catch (Exception _)
+#pragma warning restore CS0168 // 変数は宣言されていますが、使用されていません
                 {
                     IncorrectOpenPassMsg.Visibility = Visibility.Visible;
                 }
@@ -213,6 +238,7 @@ namespace encedit
             OpenPasswordFlyout.Hide();
             OpenPassword.Password = "";
             IncorrectOpenPassMsg.Visibility = Visibility.Collapsed;
+            openFile = null;
         }
     }
 

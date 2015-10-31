@@ -7,6 +7,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -39,7 +40,6 @@ namespace encedit
         /// <param name="e">起動の要求とプロセスの詳細を表示します。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
@@ -47,6 +47,21 @@ namespace encedit
             }
 #endif
 
+            Frame rootFrame = getRootFrame();
+
+            if (rootFrame.Content == null)
+            {
+                // ナビゲーション スタックが復元されない場合は、最初のページに移動します。
+                // このとき、必要な情報をナビゲーション パラメーターとして渡して、新しいページを
+                //構成します
+                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+            }
+            // 現在のウィンドウがアクティブであることを確認します
+            Window.Current.Activate();
+        }
+
+        private Frame getRootFrame()
+        {
             Frame rootFrame = Window.Current.Content as Frame;
 
             // ウィンドウに既にコンテンツが表示されている場合は、アプリケーションの初期化を繰り返さずに、
@@ -58,24 +73,11 @@ namespace encedit
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: 以前中断したアプリケーションから状態を読み込みます
-                }
-
                 // フレームを現在のウィンドウに配置します
                 Window.Current.Content = rootFrame;
             }
 
-            if (rootFrame.Content == null)
-            {
-                // ナビゲーション スタックが復元されない場合は、最初のページに移動します。
-                // このとき、必要な情報をナビゲーション パラメーターとして渡して、新しいページを
-                //構成します
-                rootFrame.Navigate(typeof(MainPage), e.Arguments);
-            }
-            // 現在のウィンドウがアクティブであることを確認します
-            Window.Current.Activate();
+            return rootFrame;
         }
 
         /// <summary>
@@ -104,8 +106,23 @@ namespace encedit
 
         protected override void OnFileActivated(FileActivatedEventArgs args)
         {
-            if (args.Files.Count > 0) {
-                var f = args.Files[0];
+            base.OnFileActivated(args);
+
+            if (args.Files.Count > 0)
+            {
+                Frame rootFrame = getRootFrame();
+
+                if (rootFrame.Content == null)
+                {
+                    rootFrame.Navigate(typeof(MainPage), args.Files[0] as StorageFile);
+                }
+                else
+                {
+                    ((MainPage)rootFrame.Content).OnFileReActivated(args.Files[0] as StorageFile);
+                }
+
+                // 現在のウィンドウがアクティブであることを確認します
+                Window.Current.Activate();
             }
         }
     }
